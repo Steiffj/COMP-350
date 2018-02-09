@@ -1,0 +1,128 @@
+Solving for board:
+4  2  5  
+3  1  8  
+7  6  0  
+
+////////////////////
+// Search Results //
+////////////////////
+
+02/09/2018 04:37:37
+Search duration: 0 seconds
+Total number of nodes in search path: 23
+Duplicate nodes in search path: 0
+
+State 1 of 23
+4  2  5  
+3  1  8  
+7  6  0  
+
+State 2 of 23
+4  2  5  
+3  1  0  
+7  6  8  
+
+State 3 of 23
+4  2  0  
+3  1  5  
+7  6  8  
+
+State 4 of 23
+4  0  2  
+3  1  5  
+7  6  8  
+
+State 5 of 23
+4  1  2  
+3  0  5  
+7  6  8  
+
+State 6 of 23
+4  1  2  
+0  3  5  
+7  6  8  
+
+State 7 of 23
+4  1  2  
+7  3  5  
+0  6  8  
+
+State 8 of 23
+4  1  2  
+7  3  5  
+6  0  8  
+
+State 9 of 23
+4  1  2  
+7  3  5  
+6  8  0  
+
+State 10 of 23
+4  1  2  
+7  3  0  
+6  8  5  
+
+State 11 of 23
+4  1  2  
+7  0  3  
+6  8  5  
+
+State 12 of 23
+4  1  2  
+7  8  3  
+6  0  5  
+
+State 13 of 23
+4  1  2  
+7  8  3  
+0  6  5  
+
+State 14 of 23
+4  1  2  
+0  8  3  
+7  6  5  
+
+State 15 of 23
+0  1  2  
+4  8  3  
+7  6  5  
+
+State 16 of 23
+1  0  2  
+4  8  3  
+7  6  5  
+
+State 17 of 23
+1  2  0  
+4  8  3  
+7  6  5  
+
+State 18 of 23
+1  2  3  
+4  8  0  
+7  6  5  
+
+State 19 of 23
+1  2  3  
+4  8  5  
+7  6  0  
+
+State 20 of 23
+1  2  3  
+4  8  5  
+7  0  6  
+
+State 21 of 23
+1  2  3  
+4  0  5  
+7  8  6  
+
+State 22 of 23
+1  2  3  
+4  5  0  
+7  8  6  
+
+State 23 of 23
+1  2  3  
+4  5  6  
+7  8  0  

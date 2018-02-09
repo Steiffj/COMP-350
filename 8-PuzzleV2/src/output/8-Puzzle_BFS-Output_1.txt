@@ -1,0 +1,141 @@
+Unsolvable board
+4  6  3  
+1  5  7  
+0  2  8  
+Retrying...
+
+Unsolvable board
+5  8  3  
+4  6  0  
+2  1  7  
+Retrying...
+
+Unsolvable board
+5  1  4  
+0  6  3  
+7  8  2  
+Retrying...
+
+Solving for board:
+5  4  7  
+1  2  3  
+8  0  6  
+
+////////////////////
+// Search Results //
+////////////////////
+
+02/09/2018 03:59:56
+Search duration: 121 seconds
+Total number of nodes in search path: 22
+Duplicate nodes in search path: 0
+
+State 1 of 22
+5  4  7  
+1  2  3  
+8  0  6  
+
+State 2 of 22
+5  4  7  
+1  2  3  
+0  8  6  
+
+State 3 of 22
+5  4  7  
+0  2  3  
+1  8  6  
+
+State 4 of 22
+5  4  7  
+2  0  3  
+1  8  6  
+
+State 5 of 22
+5  0  7  
+2  4  3  
+1  8  6  
+
+State 6 of 22
+5  7  0  
+2  4  3  
+1  8  6  
+
+State 7 of 22
+5  7  3  
+2  4  0  
+1  8  6  
+
+State 8 of 22
+5  7  3  
+2  4  6  
+1  8  0  
+
+State 9 of 22
+5  7  3  
+2  4  6  
+1  0  8  
+
+State 10 of 22
+5  7  3  
+2  0  6  
+1  4  8  
+
+State 11 of 22
+5  0  3  
+2  7  6  
+1  4  8  
+
+State 12 of 22
+0  5  3  
+2  7  6  
+1  4  8  
+
+State 13 of 22
+2  5  3  
+0  7  6  
+1  4  8  
+
+State 14 of 22
+2  5  3  
+1  7  6  
+0  4  8  
+
+State 15 of 22
+2  5  3  
+1  7  6  
+4  0  8  
+
+State 16 of 22
+2  5  3  
+1  0  6  
+4  7  8  
+
+State 17 of 22
+2  0  3  
+1  5  6  
+4  7  8  
+
+State 18 of 22
+0  2  3  
+1  5  6  
+4  7  8  
+
+State 19 of 22
+1  2  3  
+0  5  6  
+4  7  8  
+
+State 20 of 22
+1  2  3  
+4  5  6  
+0  7  8  
+
+State 21 of 22
+1  2  3  
+4  5  6  
+7  0  8  
+
+State 22 of 22
+1  2  3  
+4  5  6  
+7  8  0  

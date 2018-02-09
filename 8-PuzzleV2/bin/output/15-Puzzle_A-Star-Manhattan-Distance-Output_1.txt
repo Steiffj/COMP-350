@@ -1,0 +1,26 @@
+Solving for board:
+1  2  3  4  
+5  6  7  8  
+9  10  11  12  
+13  14  0  15  
+
+////////////////////
+// Search Results //
+////////////////////
+
+02/09/2018 04:37:39
+Search duration: 0 seconds
+Total number of nodes in search path: 2
+Duplicate nodes in search path: 0
+
+State 1 of 2
+1  2  3  4  
+5  6  7  8  
+9  10  11  12  
+13  14  0  15  
+
+State 2 of 2
+1  2  3  4  
+5  6  7  8  
+9  10  11  12  
+13  14  15  0  

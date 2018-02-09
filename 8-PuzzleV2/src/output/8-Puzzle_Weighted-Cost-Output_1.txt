@@ -1,0 +1,283 @@
+Solving for board:
+1  0  5  
+8  2  7  
+3  6  4  
+
+////////////////////
+// Search Results //
+////////////////////
+
+02/09/2018 04:34:42
+Search duration: 0 seconds
+Total number of nodes in search path: 54
+Duplicate nodes in search path: 0
+
+State 1 of 54
+1  0  5  
+8  2  7  
+3  6  4  
+
+State 2 of 54
+1  5  0  
+8  2  7  
+3  6  4  
+
+State 3 of 54
+1  5  7  
+8  2  0  
+3  6  4  
+
+State 4 of 54
+1  5  7  
+8  0  2  
+3  6  4  
+
+State 5 of 54
+1  5  7  
+8  6  2  
+3  0  4  
+
+State 6 of 54
+1  5  7  
+8  6  2  
+0  3  4  
+
+State 7 of 54
+1  5  7  
+0  6  2  
+8  3  4  
+
+State 8 of 54
+1  5  7  
+6  0  2  
+8  3  4  
+
+State 9 of 54
+1  0  7  
+6  5  2  
+8  3  4  
+
+State 10 of 54
+1  7  0  
+6  5  2  
+8  3  4  
+
+State 11 of 54
+1  7  2  
+6  5  0  
+8  3  4  
+
+State 12 of 54
+1  7  2  
+6  0  5  
+8  3  4  
+
+State 13 of 54
+1  7  2  
+6  3  5  
+8  0  4  
+
+State 14 of 54
+1  7  2  
+6  3  5  
+8  4  0  
+
+State 15 of 54
+1  7  2  
+6  3  0  
+8  4  5  
+
+State 16 of 54
+1  7  2  
+6  0  3  
+8  4  5  
+
+State 17 of 54
+1  7  2  
+0  6  3  
+8  4  5  
+
+State 18 of 54
+1  7  2  
+8  6  3  
+0  4  5  
+
+State 19 of 54
+1  7  2  
+8  6  3  
+4  0  5  
+
+State 20 of 54
+1  7  2  
+8  6  3  
+4  5  0  
+
+State 21 of 54
+1  7  2  
+8  6  0  
+4  5  3  
+
+State 22 of 54
+1  7  2  
+8  0  6  
+4  5  3  
+
+State 23 of 54
+1  7  2  
+8  5  6  
+4  0  3  
+
+State 24 of 54
+1  7  2  
+8  5  6  
+0  4  3  
+
+State 25 of 54
+1  7  2  
+0  5  6  
+8  4  3  
+
+State 26 of 54
+1  7  2  
+5  0  6  
+8  4  3  
+
+State 27 of 54
+1  7  2  
+5  6  0  
+8  4  3  
+
+State 28 of 54
+1  7  2  
+5  6  3  
+8  4  0  
+
+State 29 of 54
+1  7  2  
+5  6  3  
+8  0  4  
+
+State 30 of 54
+1  7  2  
+5  6  3  
+0  8  4  
+
+State 31 of 54
+1  7  2  
+0  6  3  
+5  8  4  
+
+State 32 of 54
+1  7  2  
+6  0  3  
+5  8  4  
+
+State 33 of 54
+1  7  2  
+6  8  3  
+5  0  4  
+
+State 34 of 54
+1  7  2  
+6  8  3  
+5  4  0  
+
+State 35 of 54
+1  7  2  
+6  8  0  
+5  4  3  
+
+State 36 of 54
+1  7  2  
+6  0  8  
+5  4  3  
+
+State 37 of 54
+1  7  2  
+0  6  8  
+5  4  3  
+
+State 38 of 54
+1  7  2  
+5  6  8  
+0  4  3  
+
+State 39 of 54
+1  7  2  
+5  6  8  
+4  0  3  
+
+State 40 of 54
+1  7  2  
+5  0  8  
+4  6  3  
+
+State 41 of 54
+1  7  2  
+5  8  0  
+4  6  3  
+
+State 42 of 54
+1  7  2  
+5  8  3  
+4  6  0  
+
+State 43 of 54
+1  7  2  
+5  8  3  
+4  0  6  
+
+State 44 of 54
+1  7  2  
+5  0  3  
+4  8  6  
+
+State 45 of 54
+1  0  2  
+5  7  3  
+4  8  6  
+
+State 46 of 54
+1  2  0  
+5  7  3  
+4  8  6  
+
+State 47 of 54
+1  2  3  
+5  7  0  
+4  8  6  
+
+State 48 of 54
+1  2  3  
+5  7  6  
+4  8  0  
+
+State 49 of 54
+1  2  3  
+5  7  6  
+4  0  8  
+
+State 50 of 54
+1  2  3  
+5  0  6  
+4  7  8  
+
+State 51 of 54
+1  2  3  
+0  5  6  
+4  7  8  
+
+State 52 of 54
+1  2  3  
+4  5  6  
+0  7  8  
+
+State 53 of 54
+1  2  3  
+4  5  6  
+7  0  8  
+
+State 54 of 54
+1  2  3  
+4  5  6  
+7  8  0  
