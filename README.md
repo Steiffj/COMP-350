@@ -15,3 +15,10 @@ There are 5 approaches the program can use to find a solution:
 3. __Weighted Cost__ - Swap the blank (represented by the 0) with the greatest (in numeric value) adjacent tile 
 4. __A* using number of misplaced tiles and moves made__
 5. __A* using Manhattan Distance and moves made__
+
+#### Assignment 3 - Othello
+* __Resources__
+  * [Othello Wiki](https://en.wikipedia.org/wiki/Reversi)
+  * [Computer Othello Wiki](https://en.wikipedia.org/wiki/Computer_Othello)
+  * [Wiki Strategy Guide](https://en.wikibooks.org/wiki/Reversi/Strategy)
+  * [Another Strategy Guide](http://radagast.se/othello/Help/strategy.html)
