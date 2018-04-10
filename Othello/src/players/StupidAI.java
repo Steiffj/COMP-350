@@ -12,7 +12,6 @@ public class StupidAI extends Player {
 	
 	public StupidAI(String name, Color color) {
 		super(name, color);
-		// TODO Auto-generated constructor stub
 	}
 	
 	@Override

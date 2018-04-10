@@ -121,6 +121,8 @@ public class OthelloBoard extends Board {
 			for (int mult = 1; inBounds(row + rowOffset * mult, col + colOffset * mult); mult++) {
 				if(get(row + rowOffset * mult, col + colOffset * mult) != c) {
 					flip(row + rowOffset * mult, col + colOffset * mult);
+				} else {
+					break;
 				}
 			}
 		}
