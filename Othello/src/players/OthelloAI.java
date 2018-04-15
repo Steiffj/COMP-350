@@ -1,20 +1,20 @@
 package players;
 
-import components.Board;
 import components.Color;
-import components.Coordinate;
 import components.Player;
 import heuristics.Heuristic;
 
 public abstract class OthelloAI extends Player {
 	
-	private Heuristic[] heuristics;
+	/***
+	 * The weights of all the {@link Heuristic}s in the array should add up to 1. 
+	 */
+	protected Heuristic[] heuristics;
 	
-	public OthelloAI(String name, Color color, Heuristic...heuristics ) {
+	protected Player opponent;
+	
+	public OthelloAI(String name, Color color, Heuristic... heuristics) {
 		super(name, color);
 		this.heuristics = heuristics;
 	}
-	
-	@Override
-	public abstract Coordinate makeMove(Board board);
 }

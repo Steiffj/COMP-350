@@ -20,6 +20,7 @@ public class Human extends Player {
 	public Coordinate makeMove(Board board) {
 		int row = -1;
 		int col = -1;
+		Coordinate move = null;
 		String command;
 		String[] parts;
 		
@@ -38,14 +39,12 @@ public class Human extends Player {
 						col = c;
 					}
 				}
-				
 				row = Integer.parseInt(parts[1]) - 1;
-				
+				move = new Coordinate(row, col);
 			} else {
-				break;
+				break;	// TODO make things not crash with bad input
 			}
-		} 
-		
-		return new Coordinate(row, col);
+		}
+		return move;
 	}
 }

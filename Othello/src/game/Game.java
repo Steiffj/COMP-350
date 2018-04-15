@@ -1,5 +1,6 @@
 package game;
 
+import java.util.HashMap;
 import java.util.Scanner;
 
 import components.Board;
@@ -7,14 +8,66 @@ import components.Color;
 import components.Coordinate;
 import components.OthelloBoard;
 import components.Player;
-import players.StupidAI;
+import heuristics.MaxMobilityHeuristic;
+import heuristics.MaxPiecesHeuristic;
+import heuristics.MinMobilityHeuristic;
+import heuristics.PieceTableHeuristic;
+import players.HybridAI;
+import players.ShallowMindAI;
 
 public class Game {
+	public static HashMap<String, Player> avatars = new HashMap<String, Player>();
+	public static Player p1;
+	public static Player p2;
 	
 	public static Scanner sc = new Scanner(System.in);
 	
 	public static void main(String[] args) {
+		initPlayerList();
+		choosePlayers();
 		playTournament(3);
+		
+//		Player shallow = new ShallowMindAI("Shallow Mind", Color.W, new MaxPiecesHeuristic(35), new MinMobilityHeuristic(55), new PieceTableHeuristic(75));
+//		Board bTest = new OthelloBoard();
+//		bTest.set(Color.B, new Coordinate(5,4));
+//		System.out.println(bTest.toString());
+//		bTest.set(shallow.getColor(), shallow.makeMove(bTest));
+//		System.out.println(bTest.toString());
+		System.exit(0);
+	}
+	
+	public static void initPlayerList() {
+		avatars.put("p1", new HybridAI("Pieces", Color.B, false, new MaxPiecesHeuristic(1)));
+		avatars.put("p2", new HybridAI("Pieces2", Color.B, false, new MaxPiecesHeuristic(1)));
+		avatars.put("m1", new HybridAI("Mobility", Color.B, false, new MaxMobilityHeuristic(1)));
+		avatars.put("m2", new HybridAI("Mobility2", Color.B, false, new MaxMobilityHeuristic(1)));
+		avatars.put("h1", new HybridAI("Hybrid", Color.B, false, new MaxPiecesHeuristic(75), new MaxMobilityHeuristic(25)));
+		avatars.put("h2", new HybridAI("Hybrid2 Curves", Color.B, false, new MaxPiecesHeuristic(45), new MaxMobilityHeuristic(25), new PieceTableHeuristic(100)));
+		avatars.put("shallow", new ShallowMindAI("Shallow Mind", Color.W, new MaxPiecesHeuristic(35), new MinMobilityHeuristic(55), new PieceTableHeuristic(75)));
+	}
+	
+	public static void choosePlayers() {
+		System.out.println("Player Options:");
+		for (String name : avatars.keySet()) {
+			System.out.print(name + "  ");
+		}
+		System.out.print("\n\n");
+		
+		System.out.print("Which avatar do you choose as player 1? ");
+		String player1 = sc.nextLine();
+		while(!avatars.containsKey(player1)) {
+			System.out.print("Which avatar do you choose as player 1? ");
+		}
+		System.out.print("Which avatar do you choose as player 2? ");
+		String player2 = sc.nextLine();
+		while(!avatars.containsKey(player2)) {
+			System.out.print("Which avatar do you choose as player 2? ");
+		}
+		
+		p1 = avatars.get(player1);
+		p2 = avatars.get(player2);
+		p1.setColor(Color.B);
+		p2.setColor(Color.W);
 	}
 	
 	/**
@@ -50,15 +103,10 @@ public class Game {
 		 * Instantiate Player AIs from desired classes
 		 * Just change to Player types and names as desired
 		 */
-		Player p1;
-		Player p2;
 		
 		if(swap) {
-			p1 = new StupidAI("Person", Color.B);
-			p2 = new StupidAI("Dumn", Color.W);
-		} else {
-			p1 = new StupidAI("Person", Color.B);
-			p2 = new StupidAI("Dumn", Color.W);
+			p1.swapColor();
+			p2.swapColor();
 		}
 		
 		int currentTurn = 1;
@@ -66,9 +114,15 @@ public class Game {
 		// Each iteration through the while-loop is one full turn
 		while(!gameBoard.isGameOver()) {
 			System.out.println("\n\n--- Turn " + currentTurn++ + " ---");
-			System.out.println("  " + p1.getColor() + " total: " + gameBoard.countPieces(p1.getColor()));
-			System.out.println("  " + p2.getColor() + " total: " + gameBoard.countPieces(p2.getColor()));
-			turn(p1, p2, gameBoard);
+			if(swap) {
+				System.out.println("  " + p2.getColor() + " total: " + gameBoard.countPieces(p2.getColor()));
+				System.out.println("  " + p1.getColor() + " total: " + gameBoard.countPieces(p1.getColor()));
+				turn(p2, p1, gameBoard);
+			} else {
+				System.out.println("  " + p1.getColor() + " total: " + gameBoard.countPieces(p1.getColor()));
+				System.out.println("  " + p2.getColor() + " total: " + gameBoard.countPieces(p2.getColor()));
+				turn(p1, p2, gameBoard);
+			}
 		}
 		
 		System.out.println("\n\n====== Game Over! ======\n\n" + gameBoard.toString());
@@ -82,8 +136,8 @@ public class Game {
 					p2.getName() + ", playing as " + p2.getColor()));
 		}
 		
-		System.out.println("  " + p1.getColor() + " total: " + gameBoard.countPieces(p1.getColor()));
-		System.out.println("  " + p2.getColor() + " total: " + gameBoard.countPieces(p2.getColor()));
+		System.out.println("\n  " + Color.B + " total: " + gameBoard.countPieces(Color.B));
+		System.out.println("  " + Color.W + " total: " + gameBoard.countPieces(Color.W));
 		
 		return p1.getColor() == gameBoard.winner() ? p1 : p2;
 	}
@@ -98,8 +152,14 @@ public class Game {
 	 */
 	public static void turn(Player p1, Player p2, Board b) {
 		ply(p1, b);
+		System.out.println("\n  " + Color.B + " total: " + b.countPieces(Color.B));
+		System.out.println("  " + Color.W + " total: " + b.countPieces(Color.W));
+		
 		System.out.print("\n");
+		
 		ply(p2, b);
+		System.out.println("\n  " + Color.B + " total: " + b.countPieces(Color.B));
+		System.out.println("  " + Color.W + " total: " + b.countPieces(Color.W));
 	}
 	
 	/**
@@ -121,7 +181,7 @@ public class Game {
 			while (!b.set(p.getColor(), (playerMove = p.makeMove(b)))) {
 				System.out.println("\n" + p.getName() + " attempted invalid move: " + convertCoordinate(playerMove) + "\nPress ENTER to continue");
 				sc.nextLine();
-				System.out.print(p.getName() + "\'s move (" + p.getColor() + "): ");
+				System.out.print(p.getName() + "\'s move (" + p.getColor() + ") ");
 			}
 		} else {
 			System.out.println("\n" + p.getName() + " passes (no moves available).");
@@ -135,8 +195,11 @@ public class Game {
 	 * @return 
 	 */
 	public static String convertCoordinate(Coordinate coord) {
-		String humanCoord = "";
+		if (coord == null) {
+			return "NULL COORDINATE";
+		}
 		
+		String humanCoord = "";
 		humanCoord += "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")[coord.getCol()];
 		humanCoord += (coord.getRow() + 1);
 		

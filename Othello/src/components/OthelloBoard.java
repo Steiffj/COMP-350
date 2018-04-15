@@ -37,28 +37,32 @@ public class OthelloBoard extends Board {
 		initialize();
 	}
 	
-	public OthelloBoard(OthelloBoard that) {
+	public OthelloBoard(Board that) {
 		super(that.width);
 		contents = new Color[width][width];
 		
-		for (int i = 0; i < contents[i].length; i++) {
-			for (int j = 0; i < contents[j].length; j++) {
+		for (int i = 0; i < contents.length; i++) {
+			for (int j = 0; j < contents[i].length; j++) {
 				contents[i][j] = that.contents[i][j];
 			}
 		}
 	}
 	
 	@Override
-	public boolean set(Color disk, Coordinate coord) {
+	public boolean set(Color piece, Coordinate coord) {
+		
+		if (piece == null || coord == null) {
+			return false;
+		}
 		
 		if (!inBounds(coord) || contents[coord.getRow()][coord.getCol()] != Color.EMPTY) {
 			// Position provided is already occupied - don't attempt to place piece on the board
 			// Or the coordinate provided is invalid
 			return false;
 			
-		} else if (checkValidMove(disk, coord)) {
+		} else if (checkValidMove(piece, coord)) {
 			// Attempted move is valid - apply move to board
-			applyMove(disk, coord);
+			applyMove(piece, coord);
 			return true;
 			
 		} else {
