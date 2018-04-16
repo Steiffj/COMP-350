@@ -63,12 +63,16 @@ public class ShallowMindAI extends OthelloAI {
 				double prevScore;
 				double currScore;
 				double percentError;
-				System.out.println("\nUpdating opponent's estimated heuristics\n");
+//				System.out.println("\nUpdating opponent's estimated heuristics\n");
 				for (Heuristic h : oppHeuristics) {
 					prevScore = h.gradeBoard(oppColor, previousBoard);
 					currScore = h.gradeBoard(oppColor, currentBoard);
-					percentError = Math.abs((currScore - prevScore) / prevScore) * 100;
-					System.out.println("% Error for " + h.getName() + ": " + percentError);
+					percentError = (currScore - prevScore) / prevScore * 100;
+					if (percentError < 0) {
+						percentError *= -1;
+					}
+					
+//					System.out.println("% Error for " + h.getName() + ": " + percentError);
 					// TODO maybe tune these ranges, they're just semi-randomly thrown in there for now
 					if (percentError < 3) {
 						h.updateWeight(5 * oppCurveOffset, true);
@@ -88,10 +92,10 @@ public class ShallowMindAI extends OthelloAI {
 						h.updateWeight(-2 * oppCurveOffset, true);
 					} else if (percentError < 59) {
 						h.updateWeight(-3 * oppCurveOffset, true);
-					} else {
+					} else if (percentError < 100){
 						h.updateWeight(-5 * oppCurveOffset, true);
 					}
-					System.out.println(h.getName() + " updated weight: " + h.getWeight());
+//					System.out.println(h.getName() + " updated weight: " + h.getWeight());
 				}
 			}
 		} catch (NullPointerException e) {
@@ -178,17 +182,17 @@ public class ShallowMindAI extends OthelloAI {
 	public Coordinate makeMove(Board board) {
 		List<Coordinate> moves = board.getValidMoves(color);
 		if (moves.size() == 0) {
-			System.out.println("No moves");
+//			System.out.println("No moves");
 			return null;
 			
 		} else if (board.equals(startBoard)) {
-			System.out.println("Random choice");
+//			System.out.println("Random choice");
 			previousBoard = board.clone();
 			Random rand = new Random();
 			return moves.get(rand.nextInt(moves.size()));
 			
 		} else {
-			System.out.println("\n\n*** Search started in makeMove ***\n\n");
+//			System.out.println("\n\n*** Search started in makeMove ***\n\n");
 			learnOppHeuristics(board);	// update opponent's estimated heuristics for all threads based on opponent's previous ply
 			curveHeuristics(board);		// weight Shallow Mind's heuristics based on the number of pieces on the board
 			Coordinate bestMove = moves.get(0);
@@ -197,7 +201,7 @@ public class ShallowMindAI extends OthelloAI {
 			double highestScore = 0.0d;
 			double currentScore = 0.0d;
 			for (Coordinate move : moves) {
-				System.out.println("\n==== Move Search ====");
+//				System.out.println("\n==== Move Search ====");
 				copy = board.clone();
 				copy.set(color, move);
 				currentScore = getAggregateHeuristic(copy, timeLimitPerMove);
@@ -220,7 +224,7 @@ public class ShallowMindAI extends OthelloAI {
 	 * @param timeLimit - how long a thread can take to search down the tree, based on a single heuristic
 	 * @return the value of the specified board, based on itself and on potential future board states
 	 */
-	private double getAggregateHeuristic(Board board, long timeLimit) {
+	private synchronized double getAggregateHeuristic(Board board, long timeLimit) {
 		//Board localCopy = board.clone();
 		double aggregateHeuristic = 0.0d;
 		double singleHeuristic = 0.0d;

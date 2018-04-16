@@ -10,7 +10,9 @@ import components.OthelloBoard;
 import components.Player;
 import heuristics.MaxPiecesHeuristic;
 import heuristics.MinMobilityHeuristic;
+import heuristics.ParityHeuristic;
 import heuristics.PieceTableHeuristic;
+import players.Human;
 import players.HybridAI;
 import players.ShallowMindAI;
 
@@ -30,12 +32,11 @@ public class Game {
 	
 	public static void initPlayerList() {
 		avatars.put("p1", new HybridAI("Pieces", Color.B, false, new MaxPiecesHeuristic(1)));
-		avatars.put("p2", new HybridAI("Pieces2", Color.B, false, new MaxPiecesHeuristic(1)));
 		avatars.put("m1", new HybridAI("Mobility", Color.B, false, new MinMobilityHeuristic(1)));
-		avatars.put("m2", new HybridAI("Mobility2", Color.B, false, new MinMobilityHeuristic(1)));
 		avatars.put("h1", new HybridAI("Hybrid", Color.B, false, new MaxPiecesHeuristic(75), new MinMobilityHeuristic(25)));
 		avatars.put("h2", new HybridAI("Hybrid2 Curves", Color.B, false, new MaxPiecesHeuristic(40), new MinMobilityHeuristic(65), new PieceTableHeuristic(100)));
-		avatars.put("shallow", new ShallowMindAI("Shallow Mind", Color.B, new PieceTableHeuristic(600), new MaxPiecesHeuristic(40), new MinMobilityHeuristic(65)));
+		avatars.put("shallow", new ShallowMindAI("Shallow Mind", Color.B, new PieceTableHeuristic(800), new MaxPiecesHeuristic(200), new MinMobilityHeuristic(300), new ParityHeuristic(50000)));
+		avatars.put("human", new Human("A Real Live Person", Color.B));
 	}
 	
 	public static void choosePlayers() {
@@ -79,6 +80,8 @@ public class Game {
 				System.out.print("\nSwitch who goes first for the next game? (y/n): ");
 				if (sc.nextLine().matches("[Yy][Ee]?[Ss]?")) {
 					swap = true;
+				} else {
+					swap = false;
 				}
 			}
 		}
@@ -91,11 +94,6 @@ public class Game {
 	public static Player playGame(boolean swap) {
 		Board gameBoard = new OthelloBoard();
 		
-		/*
-		 * Instantiate Player AIs from desired classes
-		 * Just change to Player types and names as desired
-		 */
-		
 		if(swap) {
 			p1.swapColor();
 			p2.swapColor();
@@ -107,12 +105,12 @@ public class Game {
 		while(!gameBoard.isGameOver()) {
 			System.out.println("\n\n--- Turn " + currentTurn++ + " ---");
 			if(swap) {
-				System.out.println("  " + p2.getColor() + " total: " + gameBoard.countPieces(p2.getColor()));
-				System.out.println("  " + p1.getColor() + " total: " + gameBoard.countPieces(p1.getColor()));
+				System.out.println("  " + Color.B + " total: " + gameBoard.countPieces(Color.B));
+				System.out.println("  " + Color.W + " total: " + gameBoard.countPieces(Color.W));
 				turn(p2, p1, gameBoard);
 			} else {
-				System.out.println("  " + p1.getColor() + " total: " + gameBoard.countPieces(p1.getColor()));
-				System.out.println("  " + p2.getColor() + " total: " + gameBoard.countPieces(p2.getColor()));
+				System.out.println("  " + Color.B + " total: " + gameBoard.countPieces(Color.B));
+				System.out.println("  " + Color.W + " total: " + gameBoard.countPieces(Color.W));
 				turn(p1, p2, gameBoard);
 			}
 		}
