@@ -16,12 +16,12 @@ public class MaxPiecesHeuristic extends Heuristic {
 	}
 	
 	@Override
-	public double gradeBoard(Color piece, Board board) {
+	public long gradeBoard(Color piece, Board board) {
 		return board.countPieces(piece) * weight;
 	}
 
 	@Override
-	public double gradeBoardRaw(Color piece, Board board) {
+	public long gradeBoardRaw(Color piece, Board board) {
 		// TODO Auto-generated method stub
 		return board.countPieces(piece);
 	}

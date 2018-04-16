@@ -1,7 +1,6 @@
 package heuristics;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -14,7 +13,7 @@ import components.Board;
 import components.Color;
 import components.Coordinate;
 
-public class HeuristicSearchThread implements Callable<Double> {
+public class HeuristicSearchThread implements Callable<Long> {
 	
 	// Othello Data //
 	private List<Heuristic> oppHeuristics;
@@ -47,10 +46,11 @@ public class HeuristicSearchThread implements Callable<Double> {
 	/////////////////
 	// Constructor //
 	/////////////////
-	public HeuristicSearchThread(Heuristic heuristic) {
+	public HeuristicSearchThread(Heuristic heuristic, List<Heuristic> oppHeuristics) {
 		this.heuristic = heuristic;
 		threadName = heuristic.getName() + " Thread";
-		oppHeuristics = Arrays.asList(new MaxPiecesHeuristic(50), new MinMobilityHeuristic(50), new PieceTableHeuristic(50));
+		//oppHeuristics = Arrays.asList(new MaxPiecesHeuristic(50), new MinMobilityHeuristic(50), new PieceTableHeuristic(50));
+		this.oppHeuristics = oppHeuristics;
 		previousBoard = currentBoard = null;
 		rand = new Random();
 		initialize();
@@ -69,16 +69,16 @@ public class HeuristicSearchThread implements Callable<Double> {
 		currentBoard = b.clone();
 	}
 	
-	private double gradeBoardOg(Board board) {
+	private long gradeBoardOg(Board board) {
 		return heuristic.gradeBoard(ogColor, board);
 	}
 	
-	private double gradeBoardOpp(Board board) {
+	private long gradeBoardOpp(Board board) {
 		double oppScore = 0.0d;
 		for (Heuristic h : oppHeuristics) {
 			oppScore += h.gradeBoard(oppColor, board);
 		}
-		return oppScore / oppHeuristics.size();
+		return (long) Math.ceil(oppScore / oppHeuristics.size());
 	}
 	
 	private void learnOppHeuristics() {
@@ -126,22 +126,22 @@ public class HeuristicSearchThread implements Callable<Double> {
 	///////////////////////////////////////////
 	// Where Othello and Multithreading Meet //
 	///////////////////////////////////////////
-	private void search() {
+	private long search() {
 		initialize();
-		learnOppHeuristics();
 		List<Coordinate> ogMoves;
-		HashMap<Double, Coordinate> oppMoves;
-		List<Double> oppScores;
+		HashMap<Long, Coordinate> oppMoves;
+		List<Long> oppScores;
 		Queue<Board> frontier = new LinkedList<Board>();
 		
 		frontier.add(currentBoard.clone());
 		Board localBoard;
 		Board futureBoard;
-		double currentScore;
-		double maxScore;
+		long currentScore;
+		long maxScore;
 		Coordinate bestMove;
 		
 		while (System.nanoTime() < timeLimit && !frontier.isEmpty()) {
+			long startTime = System.nanoTime();
 			nodesExplored++;
 			localBoard = frontier.remove();
 			if (localBoard.isGameOver()) {
@@ -153,7 +153,7 @@ public class HeuristicSearchThread implements Callable<Double> {
 			} else {
 				ogMoves = localBoard.getValidMoves(ogColor);
 				if (ogMoves.size() > 0) {
-					maxScore = 0.0d;
+					maxScore = Long.MIN_VALUE;
 					bestMove = ogMoves.get(0);
 					
 					// Determine the best move to make for the current ply
@@ -175,17 +175,17 @@ public class HeuristicSearchThread implements Callable<Double> {
 					heuristicTotal += maxScore;
 					
 					// Find some reasonable moves for the opponent
-					oppMoves = new HashMap<Double, Coordinate>();
+					oppMoves = new HashMap<Long, Coordinate>();
 					for (Coordinate oppMove : localBoard.getValidMoves(oppColor)) {
 						futureBoard = localBoard.clone();
 						futureBoard.set(oppColor, oppMove);
-						currentScore = 0.0;
+						currentScore = 0L;
 						for (Heuristic h : oppHeuristics) {
 							currentScore += gradeBoardOpp(futureBoard);
 						}
 						oppMoves.put(currentScore, oppMove);
-						oppScores = new ArrayList<Double>();
-						for (Double val : oppMoves.keySet()) {
+						oppScores = new ArrayList<Long>();
+						for (Long val : oppMoves.keySet()) {
 							oppScores.add(val);
 						}
 						Collections.sort(oppScores);
@@ -212,21 +212,41 @@ public class HeuristicSearchThread implements Callable<Double> {
 					}
 				}
 			}
+			long elapsedTime = System.nanoTime() - startTime;
+			//System.out.println("Node " + nodesExplored + " time: " + TimeUnit.MILLISECONDS.convert(elapsedTime, TimeUnit.NANOSECONDS) + "ms");
 		}
+		
+		/*
+		 * Time's Up! Do closing calculations
+		 */
+		long aggregateHeuristic;
+		if (frontier.size() > 0) {
+			// Incomplete search - get aggregate heuristic for all nodes left in the frontier
+			aggregateHeuristic = 0L;
+			for (Board b : frontier) {
+				
+			}
+			
+		} else {
+			// Complete search - count number of wins vs losses and average that
+			aggregateHeuristic = 0L;
+		}
+		return aggregateHeuristic;
 	}
 	
 	////////////////////////////////////
 	// Multithreading-Related Methods //
 	////////////////////////////////////
 	@Override
-	public Double call() throws Exception {
+	public Long call() throws Exception {
 		// TODO set thread priority based on heuristic weight
-		System.out.println("Search started in: " + threadName + " (" + Thread.currentThread().getName() + ")");
+		Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+		//System.out.println("Search started in: " + threadName + " (" + Thread.currentThread().getName() + ")");
 		search();
 		System.out.println(threadName + " (" + Thread.currentThread().getName() + ")" + " search completed!\n\tNodes explored: " + nodesExplored + 
 				"\n\tAggregate heuristic: " + heuristicTotal + 
 				"\n\tAveraged heuristic: " + (heuristicTotal / nodesExplored));
-		return heuristicTotal / nodesExplored;
+		return (long) Math.ceil(heuristicTotal / nodesExplored);
 	}
 	
 	public void initialize() {

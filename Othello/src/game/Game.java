@@ -8,7 +8,6 @@ import components.Color;
 import components.Coordinate;
 import components.OthelloBoard;
 import components.Player;
-import heuristics.MaxMobilityHeuristic;
 import heuristics.MaxPiecesHeuristic;
 import heuristics.MinMobilityHeuristic;
 import heuristics.PieceTableHeuristic;
@@ -26,24 +25,17 @@ public class Game {
 		initPlayerList();
 		choosePlayers();
 		playTournament(3);
-		
-//		Player shallow = new ShallowMindAI("Shallow Mind", Color.W, new MaxPiecesHeuristic(35), new MinMobilityHeuristic(55), new PieceTableHeuristic(75));
-//		Board bTest = new OthelloBoard();
-//		bTest.set(Color.B, new Coordinate(5,4));
-//		System.out.println(bTest.toString());
-//		bTest.set(shallow.getColor(), shallow.makeMove(bTest));
-//		System.out.println(bTest.toString());
 		System.exit(0);
 	}
 	
 	public static void initPlayerList() {
 		avatars.put("p1", new HybridAI("Pieces", Color.B, false, new MaxPiecesHeuristic(1)));
 		avatars.put("p2", new HybridAI("Pieces2", Color.B, false, new MaxPiecesHeuristic(1)));
-		avatars.put("m1", new HybridAI("Mobility", Color.B, false, new MaxMobilityHeuristic(1)));
-		avatars.put("m2", new HybridAI("Mobility2", Color.B, false, new MaxMobilityHeuristic(1)));
-		avatars.put("h1", new HybridAI("Hybrid", Color.B, false, new MaxPiecesHeuristic(75), new MaxMobilityHeuristic(25)));
-		avatars.put("h2", new HybridAI("Hybrid2 Curves", Color.B, false, new MaxPiecesHeuristic(45), new MaxMobilityHeuristic(25), new PieceTableHeuristic(100)));
-		avatars.put("shallow", new ShallowMindAI("Shallow Mind", Color.W, new MaxPiecesHeuristic(35), new MinMobilityHeuristic(55), new PieceTableHeuristic(75)));
+		avatars.put("m1", new HybridAI("Mobility", Color.B, false, new MinMobilityHeuristic(1)));
+		avatars.put("m2", new HybridAI("Mobility2", Color.B, false, new MinMobilityHeuristic(1)));
+		avatars.put("h1", new HybridAI("Hybrid", Color.B, false, new MaxPiecesHeuristic(75), new MinMobilityHeuristic(25)));
+		avatars.put("h2", new HybridAI("Hybrid2 Curves", Color.B, false, new MaxPiecesHeuristic(40), new MinMobilityHeuristic(65), new PieceTableHeuristic(100)));
+		avatars.put("shallow", new ShallowMindAI("Shallow Mind", Color.B, new PieceTableHeuristic(600), new MaxPiecesHeuristic(40), new MinMobilityHeuristic(65)));
 	}
 	
 	public static void choosePlayers() {

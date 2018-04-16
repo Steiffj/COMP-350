@@ -21,12 +21,12 @@ public class MinMobilityHeuristic extends Heuristic {
 	}
 	
 	@Override
-	public double gradeBoard(Color piece, Board board) {
+	public long gradeBoard(Color piece, Board board) {
 		return -board.countValidMoves(piece.flip()) * weight;
 	}
 
 	@Override
-	public double gradeBoardRaw(Color piece, Board board) {
+	public long gradeBoardRaw(Color piece, Board board) {
 		// TODO Auto-generated method stub
 		return -board.countValidMoves(piece.flip());
 	}

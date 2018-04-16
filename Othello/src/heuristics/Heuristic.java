@@ -5,13 +5,13 @@ import components.Color;
 
 public abstract class Heuristic implements Comparable<Heuristic> {
 	protected String name;
-	protected int weight;
+	protected long weight;
 	
 	public Heuristic() {
 		weight = 1;
 	}
 	
-	public Heuristic(int weight) {
+	public Heuristic(long weight) {
 		this.weight = weight;
 	}
 	
@@ -19,19 +19,19 @@ public abstract class Heuristic implements Comparable<Heuristic> {
 		return name;
 	}
 	
-	public abstract double gradeBoard(Color c, Board board);
+	public abstract long gradeBoard(Color c, Board board);
 	
-	public abstract double gradeBoardRaw(Color c, Board board);
+	public abstract long gradeBoardRaw(Color c, Board board);
 
-	public double getWeight() {
+	public long getWeight() {
 		return weight;
 	}
 
-	public void updateWeight(int weight) {
+	public void updateWeight(long weight) {
 		this.weight = weight;
 	}
 	
-	public void updateWeight(int offset, boolean isOffset) {
+	public void updateWeight(long offset, boolean isOffset) {
 		if (isOffset) {
 			weight += offset;
 		} else {

@@ -20,8 +20,8 @@ public class PieceTableHeuristic extends Heuristic {
 	}
 	
 	@Override
-	public double gradeBoard(Color piece, Board board) {
-		double score = 0.0;
+	public long gradeBoard(Color piece, Board board) {
+		long score = 0L;
 		Color[][] boardInnards = board.getContents();
 		
 		for (int row = 0; row < boardInnards.length; row++) {
@@ -35,8 +35,8 @@ public class PieceTableHeuristic extends Heuristic {
 	}
 	
 	@Override
-	public double gradeBoardRaw(Color piece, Board board) {
-		double score = 0.0;
+	public long gradeBoardRaw(Color piece, Board board) {
+		long score = 0L;
 		Color[][] boardInnards = board.getContents();
 		
 		for (int row = 0; row < boardInnards.length; row++) {
