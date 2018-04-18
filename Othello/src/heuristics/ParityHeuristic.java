@@ -18,9 +18,9 @@ public class ParityHeuristic extends Heuristic {
 	@Override
 	public long gradeBoard(Color c, Board board) {
 		if (board.countValidMoves(c.flip()) == 0 && board.getSize() - board.countPieces(Color.EMPTY) % 2 != 0) {
-			return weight;
+			return weight * equalizer;
 		} else if (board.countValidMoves(c.flip()) == 0 && board.getSize() - board.countPieces(Color.EMPTY) % 2 == 0) {
-			return -weight;
+			return -weight * equalizer;
 		} else {
 			return 0;
 		}
@@ -30,5 +30,4 @@ public class ParityHeuristic extends Heuristic {
 	public long gradeBoardRaw(Color c, Board board) {
 		return gradeBoard(c, board);
 	}
-	
 }

@@ -57,7 +57,7 @@ public class HeuristicSearchThread implements Callable<Long> {
 	/////////////////////////////
 	public void setColor(Color c) {
 		ogColor = c;
-		oppColor = c.flip();
+		oppColor = ogColor.flip();
 	}
 	
 	public void setCurrentBoard(Board b) {
@@ -97,9 +97,9 @@ public class HeuristicSearchThread implements Callable<Long> {
 		frontier.add(currentBoard.clone());
 		while (System.nanoTime() < timeLimit && !frontier.isEmpty()) {
 			//long startTime = System.nanoTime();
-			nodesExplored++;
 			
 			localBoard = frontier.remove();	// dequeue node to expand
+			nodesExplored++;
 			if (localBoard.isGameOver()) {
 				/*
 				 * Current board in the queue has reached a game over state
@@ -155,20 +155,23 @@ public class HeuristicSearchThread implements Callable<Long> {
 						/*
 						 * Randomly choose somewhere in the top 35% - 65% of valid moves.
 						 * Choosing exactly 35% or 65% is more likely than in between because I don't feel like doing better math right now.
+						 * 
+						 * UPDATE: just takes the top half of the opponent's possible moves to expand upon
 						 */
 						Collections.sort(oppScores);
 						int sampleCount;
-						double sampleFloor = 0.35;	// TODO consider adjusting the sample floor and ceiling
-						double sampleCeil = 0.65;
 						if (oppScores.size() <= 3) {
 							sampleCount = oppScores.size();
 						} else {
-							sampleCount = rand.nextInt(oppScores.size());
-							if (sampleCount < Math.ceil(oppScores.size() * sampleFloor)) {
-								sampleCount = (int) Math.ceil(oppScores.size() * sampleFloor);
-							} else if (sampleCount > Math.ceil(oppScores.size() * sampleCeil)) {
-								sampleCount = (int) Math.ceil(oppScores.size() * sampleCeil);
-							}
+//							double sampleFloor = 0.35;	// TODO consider adjusting the sample floor and ceiling
+//							double sampleCeil = 0.65;
+//							sampleCount = rand.nextInt(oppScores.size());
+//							if (sampleCount < Math.ceil(oppScores.size() * sampleFloor)) {
+//								sampleCount = (int) Math.ceil(oppScores.size() * sampleFloor);
+//							} else if (sampleCount > Math.ceil(oppScores.size() * sampleCeil)) {
+//								sampleCount = (int) Math.ceil(oppScores.size() * sampleCeil);
+//							}
+							sampleCount = oppScores.size() / 2;
 						}
 						
 						// Take a sample of the opponent's better potential moves to expand further
@@ -176,6 +179,12 @@ public class HeuristicSearchThread implements Callable<Long> {
 							futureBoard = localBoard.clone();
 							futureBoard.set(oppColor, oppMoves.get(oppScores.get(i)));
 							frontier.add(futureBoard);	// enqueue board (that your opponent just played on) for future expansion
+							
+							// TODO not sure if this will help yet with the piece table heuristic
+							if (heuristic instanceof PieceTableHeuristic) {
+								heuristicTotal -= oppScores.get(i);
+								nodesExplored++;
+							}
 						}
 					}  else {
 						frontier.add(localBoard);	// enqueue board (that you just played on) for future expansion
@@ -225,7 +234,7 @@ public class HeuristicSearchThread implements Callable<Long> {
 //		System.out.println(threadName + " (" + Thread.currentThread().getName() + ")" + " search completed!\n\tNodes explored: " + nodesExplored + 
 //				"\n\tAggregate heuristic: " + heuristicTotal + 
 //				"\n\tAveraged heuristic: " + (heuristicTotal / nodesExplored));
-		if (heuristic instanceof PieceTableHeuristic || heuristic instanceof ParityHeuristic) {
+		if (heuristic instanceof PieceTableHeuristic || heuristic instanceof ParityHeuristic || heuristic instanceof StabilityHeuristic) {
 			return heuristicTotal / nodesExplored;
 		} else {
 			return result;

@@ -6,6 +6,7 @@ import components.Color;
 public abstract class Heuristic implements Comparable<Heuristic> {
 	protected String name;
 	protected long weight;
+	protected long equalizer = 100;
 	
 	public Heuristic() {
 		weight = 1;

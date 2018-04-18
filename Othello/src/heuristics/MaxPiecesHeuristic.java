@@ -17,7 +17,7 @@ public class MaxPiecesHeuristic extends Heuristic {
 	
 	@Override
 	public long gradeBoard(Color piece, Board board) {
-		return board.countPieces(piece) * weight;
+		return board.countPieces(piece) * weight * equalizer;
 	}
 
 	@Override

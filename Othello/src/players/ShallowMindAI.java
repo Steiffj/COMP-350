@@ -25,12 +25,12 @@ public class ShallowMindAI extends OthelloAI {
 	
 	// Othello stuff
 	private final Board startBoard;
-	private final Color oppColor = color.flip();
+	private Color oppColor = color.flip();
 	
 	// Othello stuff for heuristic threads
 	private List<Heuristic> oppHeuristics;
 	private Board previousBoard;
-	private int oppCurveOffset = 2;	// used for updating opponent's heuristic weights
+	private int oppCurveOffset = 6;	// used for updating opponent's heuristic weights
 	
 	// Multithreading stuff
 	private final List<HeuristicSearchThread> searchThreads;
@@ -103,6 +103,15 @@ public class ShallowMindAI extends OthelloAI {
 		}	
 	}
 	
+	@Override
+	public void swapColor() {
+		color = color.flip();
+		oppColor = oppColor.flip();
+		for (HeuristicSearchThread hst : searchThreads) {
+			hst.setColor(color);
+		}
+	}
+	
 	private void curveHeuristics(Board currentBoard) {
 		int boardSize = currentBoard.getSize();
 		int piecesOnBoard = boardSize - currentBoard.countPieces(Color.EMPTY);
@@ -127,6 +136,7 @@ public class ShallowMindAI extends OthelloAI {
 					newWeight += addRandomVariance(highVar);
 				} else {
 					// End game - high priority, low variance
+					newWeight += newWeight / 4;	// TODO threw this in without much testing
 					newWeight += newWeight * 0.17 * (boardSize - piecesOnBoard);
 					newWeight += addRandomVariance(lowVar);
 				}
@@ -161,6 +171,7 @@ public class ShallowMindAI extends OthelloAI {
 					newWeight += addRandomVariance(medVar);
 				} else {
 					// End game - low priority, high variance
+					newWeight /= 2;	// TODO also just threw this in
 					newWeight -= newWeight * 0.13 * (boardSize - piecesOnBoard);
 					newWeight += addRandomVariance(highVar);
 				}
@@ -191,10 +202,13 @@ public class ShallowMindAI extends OthelloAI {
 			Random rand = new Random();
 			return moves.get(rand.nextInt(moves.size()));
 			
+		} else if (moves.size() == 1) {
+			return moves.get(0);
+			
 		} else {
 //			System.out.println("\n\n*** Search started in makeMove ***\n\n");
 			learnOppHeuristics(board);	// update opponent's estimated heuristics for all threads based on opponent's previous ply
-			curveHeuristics(board);		// weight Shallow Mind's heuristics based on the number of pieces on the board
+//			curveHeuristics(board);		// weight Shallow Mind's heuristics based on the number of pieces on the board
 			Coordinate bestMove = moves.get(0);
 			long timeLimitPerMove = plyTimeLimit / moves.size();
 			Board copy;

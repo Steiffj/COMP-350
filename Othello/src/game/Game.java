@@ -12,6 +12,7 @@ import heuristics.MaxPiecesHeuristic;
 import heuristics.MinMobilityHeuristic;
 import heuristics.ParityHeuristic;
 import heuristics.PieceTableHeuristic;
+import heuristics.StabilityHeuristic;
 import players.Human;
 import players.HybridAI;
 import players.ShallowMindAI;
@@ -31,12 +32,21 @@ public class Game {
 	}
 	
 	public static void initPlayerList() {
-		avatars.put("p1", new HybridAI("Pieces", Color.B, false, new MaxPiecesHeuristic(1)));
-		avatars.put("m1", new HybridAI("Mobility", Color.B, false, new MinMobilityHeuristic(1)));
+		avatars.put("p", new HybridAI("Pieces", Color.B, false, new MaxPiecesHeuristic(1)));
+		avatars.put("m", new HybridAI("Mobility", Color.B, false, new MinMobilityHeuristic(1)));
 		avatars.put("h1", new HybridAI("Hybrid", Color.B, false, new MaxPiecesHeuristic(75), new MinMobilityHeuristic(25)));
-		avatars.put("h2", new HybridAI("Hybrid2 Curves", Color.B, false, new MaxPiecesHeuristic(40), new MinMobilityHeuristic(65), new PieceTableHeuristic(100)));
-		avatars.put("shallow", new ShallowMindAI("Shallow Mind", Color.B, new PieceTableHeuristic(800), new MaxPiecesHeuristic(200), new MinMobilityHeuristic(300), new ParityHeuristic(50000)));
-		avatars.put("human", new Human("A Real Live Person", Color.B));
+		avatars.put("h2", new HybridAI("Hybrid Curves", Color.B, false, new MaxPiecesHeuristic(40), new MinMobilityHeuristic(65), new PieceTableHeuristic(100)));
+		
+		avatars.put("shallow", new ShallowMindAI("Shallow Mind", Color.B, new PieceTableHeuristic(100), 
+																		new MaxPiecesHeuristic(30), 
+																		new MinMobilityHeuristic(50), 
+																		new StabilityHeuristic(60), 
+																		new ParityHeuristic(75)));
+		
+		avatars.put("shallow simple", new ShallowMindAI("Shallow Mind Simplified", Color.B, new PieceTableHeuristic(100), 
+																							new MaxPiecesHeuristic(40), 
+																							new StabilityHeuristic(65)));
+		avatars.put("human", new Human("Opponent", Color.B));
 	}
 	
 	public static void choosePlayers() {
@@ -103,7 +113,7 @@ public class Game {
 		
 		// Each iteration through the while-loop is one full turn
 		while(!gameBoard.isGameOver()) {
-			System.out.println("\n\n--- Turn " + currentTurn++ + " ---");
+			System.out.println("\n\n---== Turn " + currentTurn++ + " ==---");
 			if(swap) {
 				System.out.println("  " + Color.B + " total: " + gameBoard.countPieces(Color.B));
 				System.out.println("  " + Color.W + " total: " + gameBoard.countPieces(Color.W));
@@ -162,7 +172,20 @@ public class Game {
 	public static void ply(Player p, Board b) {
 		
 		System.out.println("\n" + b.toString(p.getColor()));
-		System.out.print(p.getName() + "\'s move (" + p.getColor() + ") ");
+		System.out.println("- Playing on board above; result shown below -");
+		
+		if (b.countValidMoves(p.getColor()) > 0) {
+			System.out.print("Valid moves: ");
+			int count = 0;
+			for (Coordinate coord : b.getValidMoves(p.getColor())) {
+				System.out.print(convertCoordinate(coord) + "  ");
+				if (++count % 8 == 0) {
+					System.out.print("\n             ");
+				}
+			}
+			System.out.print("\n");
+		}
+		System.out.print(p.getName() + "\'s ply (" + p.getColor() + "): ");
 		
 		if (b.countValidMoves(p.getColor()) > 0) {
 			
@@ -171,7 +194,10 @@ public class Game {
 			while (!b.set(p.getColor(), (playerMove = p.makeMove(b)))) {
 				System.out.println("\n" + p.getName() + " attempted invalid move: " + convertCoordinate(playerMove) + "\nPress ENTER to continue");
 				sc.nextLine();
-				System.out.print(p.getName() + "\'s move (" + p.getColor() + ") ");
+				System.out.print(p.getName() + "\'s ply (" + p.getColor() + "): ");
+			}
+			if (!(p instanceof Human)) {
+				System.out.println(convertCoordinate(playerMove));
 			}
 		} else {
 			System.out.println("\n" + p.getName() + " passes (no moves available).");
