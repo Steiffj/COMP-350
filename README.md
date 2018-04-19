@@ -17,6 +17,8 @@ There are 5 approaches the program can use to find a solution:
 5. __A* using Manhattan Distance and moves made__
 
 #### Assignment 3 - Othello
+* __Migrated to its own repository as of 4/19/2018__
+  * You can view it here: [Othello AI](https://github.com/Steiffj/Othello-AI)
 * __Resources__
   * [Othello Wiki](https://en.wikipedia.org/wiki/Reversi)
   * [Computer Othello Wiki](https://en.wikipedia.org/wiki/Computer_Othello)
