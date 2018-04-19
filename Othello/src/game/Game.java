@@ -43,9 +43,9 @@ public class Game {
 																		new StabilityHeuristic(60), 
 																		new ParityHeuristic(75)));
 		
-		avatars.put("shallow simple", new ShallowMindAI("Shallow Mind Simplified", Color.B, new PieceTableHeuristic(100), 
-																							new MaxPiecesHeuristic(40), 
-																							new StabilityHeuristic(65)));
+		avatars.put("shallow simple", new ShallowMindAI("Shallow Mind Simplified", Color.B, 
+																							new MaxPiecesHeuristic(40)
+																							));
 		avatars.put("human", new Human("Opponent", Color.B));
 	}
 	
@@ -60,11 +60,13 @@ public class Game {
 		String player1 = sc.nextLine();
 		while(!avatars.containsKey(player1)) {
 			System.out.print("Which avatar do you choose as player 1? ");
+			player1 = sc.nextLine();
 		}
 		System.out.print("Which avatar do you choose as player 2? ");
 		String player2 = sc.nextLine();
 		while(!avatars.containsKey(player2)) {
 			System.out.print("Which avatar do you choose as player 2? ");
+			player2 = sc.nextLine();
 		}
 		
 		p1 = avatars.get(player1);
@@ -179,7 +181,7 @@ public class Game {
 			int count = 0;
 			for (Coordinate coord : b.getValidMoves(p.getColor())) {
 				System.out.print(convertCoordinate(coord) + "  ");
-				if (++count % 8 == 0) {
+				if (++count % 6 == 0) {
 					System.out.print("\n             ");
 				}
 			}

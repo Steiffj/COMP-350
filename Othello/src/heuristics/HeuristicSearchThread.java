@@ -26,8 +26,7 @@ public class HeuristicSearchThread implements Callable<Long> {
 	private long winValue = 1000;
 	private Board currentBoard;
 	
-	private Color ogColor;
-	private Color oppColor;
+	private Color color;
 	
 	// Othello and Multithreading //
 	private long heuristicTotal;	// the sum of scores for all boards of your ply explored in a search
@@ -56,8 +55,7 @@ public class HeuristicSearchThread implements Callable<Long> {
 	// Othello-Related Methods //
 	/////////////////////////////
 	public void setColor(Color c) {
-		ogColor = c;
-		oppColor = ogColor.flip();
+		color = c;
 	}
 	
 	public void setCurrentBoard(Board b) {
@@ -65,13 +63,13 @@ public class HeuristicSearchThread implements Callable<Long> {
 	}
 	
 	private long gradeBoardOg(Board board) {
-		return heuristic.gradeBoard(ogColor, board);
+		return heuristic.gradeBoard(color.flip(), board);
 	}
 	
 	private long gradeBoardOpp(Board board) {
 		long oppScore = 0L;
 		for (Heuristic h : oppHeuristics) {
-			oppScore += h.gradeBoard(oppColor, board);
+			oppScore += h.gradeBoard(color.flip(), board);
 		}
 		return oppScore / oppHeuristics.size();
 	}
@@ -105,7 +103,7 @@ public class HeuristicSearchThread implements Callable<Long> {
 				 * Current board in the queue has reached a game over state
 				 * Award/Penalize extra for reaching a win/loss in the search
 				 */
-				if (localBoard.winner() == ogColor) {
+				if (localBoard.winner() == color) {
 					heuristicTotal += winValue * heuristic.getWeight();
 					numWins++;
 				} else {
@@ -113,7 +111,7 @@ public class HeuristicSearchThread implements Callable<Long> {
 					numLosses++;
 				}
 			} else {
-				ogMoves = localBoard.getValidMoves(ogColor);
+				ogMoves = localBoard.getValidMoves(color);
 				if (ogMoves.size() > 0) {
 					maxScore = Long.MIN_VALUE;
 					bestMove = ogMoves.get(0);
@@ -121,7 +119,7 @@ public class HeuristicSearchThread implements Callable<Long> {
 					// Determine the best move to make for the current ply
 					for (Coordinate ogMove : ogMoves) {
 						futureBoard = localBoard.clone();
-						futureBoard.set(ogColor, ogMove);
+						futureBoard.set(color, ogMove);
 						currentScore = gradeBoardOg(futureBoard);
 						if (currentScore > maxScore) {
 							maxScore = currentScore;
@@ -133,16 +131,16 @@ public class HeuristicSearchThread implements Callable<Long> {
 						}
 					}
 					// Grade the resulting board after applying the optimal move
-					localBoard.set(ogColor, bestMove);
+					localBoard.set(color, bestMove);
 					heuristicTotal += maxScore;	// keep score of all nodes visited for piece table and parity heuristics
 					
 					// Grade all the opponent's possible moves (just one ply down for them)
 					int oppMoveCount = 0;	// quick, kind of messy way to check if the opponent has any valid moves later on
 					oppMoves = new HashMap<Long, Coordinate>();
-					for (Coordinate oppMove : localBoard.getValidMoves(oppColor)) {
+					for (Coordinate oppMove : localBoard.getValidMoves(color.flip())) {
 						oppMoveCount++;
 						futureBoard = localBoard.clone();
-						futureBoard.set(oppColor, oppMove);
+						futureBoard.set(color.flip(), oppMove);
 						currentScore = gradeBoardOpp(futureBoard);
 						oppMoves.put(currentScore, oppMove);	
 					}
@@ -177,7 +175,7 @@ public class HeuristicSearchThread implements Callable<Long> {
 						// Take a sample of the opponent's better potential moves to expand further
 						for (int i = 0; i < sampleCount; i++) {
 							futureBoard = localBoard.clone();
-							futureBoard.set(oppColor, oppMoves.get(oppScores.get(i)));
+							futureBoard.set(color.flip(), oppMoves.get(oppScores.get(i)));
 							frontier.add(futureBoard);	// enqueue board (that your opponent just played on) for future expansion
 							
 							// TODO not sure if this will help yet with the piece table heuristic
@@ -206,7 +204,7 @@ public class HeuristicSearchThread implements Callable<Long> {
 			long aggregateScore;
 			aggregateScore = 0L;
 			for (Board b : frontier) {
-				aggregateScore += heuristic.gradeBoard(ogColor, b);
+				aggregateScore += heuristic.gradeBoard(color, b);
 			}
 			return aggregateScore / frontier.size();
 		} else if (numWins + numLosses > 0) {
@@ -218,7 +216,7 @@ public class HeuristicSearchThread implements Callable<Long> {
 			 * if your opponent has no valid moves, or if the random selection somehow decides not to expand any of your opponent's options
 			 */
 //			System.out.println("!!!!!! SEARCH GETTING WEIRD RESULTS !!!!!!!");	
-			return heuristic.gradeBoard(ogColor, currentBoard);
+			return heuristic.gradeBoard(color, currentBoard);
 		}
 		// END SEARCH METHOD
 	}

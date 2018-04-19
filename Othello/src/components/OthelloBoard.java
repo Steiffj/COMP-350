@@ -337,12 +337,12 @@ public class OthelloBoard extends Board {
 	}
 	
 	public String toString(Color c) {
-		String retString = "  A B C D E F G H \n";
+		String retString = "    A B C D E F G H \n    _______________\n";
 		List<Coordinate> validMoves = getValidMoves(c);		
 		
 		int rowNum = 1;
 		for (int row = 0; row < width; row++) {
-			retString += rowNum++ + " ";
+			retString += rowNum++ + " | ";
 			
 			for (int col = 0; col < width; col++) {
 				

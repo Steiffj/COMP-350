@@ -25,7 +25,6 @@ public class ShallowMindAI extends OthelloAI {
 	
 	// Othello stuff
 	private final Board startBoard;
-	private Color oppColor = color.flip();
 	
 	// Othello stuff for heuristic threads
 	private List<Heuristic> oppHeuristics;
@@ -65,8 +64,8 @@ public class ShallowMindAI extends OthelloAI {
 				double percentError;
 //				System.out.println("\nUpdating opponent's estimated heuristics\n");
 				for (Heuristic h : oppHeuristics) {
-					prevScore = h.gradeBoard(oppColor, previousBoard);
-					currScore = h.gradeBoard(oppColor, currentBoard);
+					prevScore = h.gradeBoard(color.flip(), previousBoard);
+					currScore = h.gradeBoard(color.flip(), currentBoard);
 					percentError = (currScore - prevScore) / prevScore * 100;
 					if (percentError < 0) {
 						percentError *= -1;
@@ -106,7 +105,6 @@ public class ShallowMindAI extends OthelloAI {
 	@Override
 	public void swapColor() {
 		color = color.flip();
-		oppColor = oppColor.flip();
 		for (HeuristicSearchThread hst : searchThreads) {
 			hst.setColor(color);
 		}
@@ -116,9 +114,9 @@ public class ShallowMindAI extends OthelloAI {
 		int boardSize = currentBoard.getSize();
 		int piecesOnBoard = boardSize - currentBoard.countPieces(Color.EMPTY);
 		long newWeight;
-		int lowVar = 3;
-		int medVar = 5;
-		int highVar = 9;
+		int lowVar = 2;
+		int medVar = 4;
+		int highVar = 6;
 		
 		// TODO not the greatest solution... very bespoke
 		for (Heuristic h : heuristics) {
@@ -208,7 +206,7 @@ public class ShallowMindAI extends OthelloAI {
 		} else {
 //			System.out.println("\n\n*** Search started in makeMove ***\n\n");
 			learnOppHeuristics(board);	// update opponent's estimated heuristics for all threads based on opponent's previous ply
-//			curveHeuristics(board);		// weight Shallow Mind's heuristics based on the number of pieces on the board
+			//curveHeuristics(board);		// weight Shallow Mind's heuristics based on the number of pieces on the board
 			Coordinate bestMove = moves.get(0);
 			long timeLimitPerMove = plyTimeLimit / moves.size();
 			Board copy;
@@ -239,7 +237,6 @@ public class ShallowMindAI extends OthelloAI {
 	 * @return the value of the specified board, based on itself and on potential future board states
 	 */
 	private synchronized double getAggregateHeuristic(Board board, long timeLimit) {
-		//Board localCopy = board.clone();
 		double aggregateHeuristic = 0.0d;
 		double singleHeuristic = 0.0d;
 		List<Future<Long>> heuristicValues;
